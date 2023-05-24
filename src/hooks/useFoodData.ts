@@ -1,8 +1,23 @@
-//import axios from "axios"
+import axios, { AxiosPromise } from "axios"
+import { FoodData } from "../interface/FoodData";
+import { useQuery } from "react-query";
 
-//const fetchData = async (): => {
- //   const response = axios.get("")
-//}
+const API_URL = 'http://localhost:5173/';
 
-//export function useFoodData(){
-//}
+const fetchData = async (): AxiosPromise<FoodData[]> => {
+   const response = axios.get(API_URL + '/food');
+   return response;
+}
+
+export function useFoodData(){
+    const query = useQuery({
+        queryFn: fetchData,
+        queryKey: ['food-data'],
+        retry: 2
+    })
+
+    return{
+        ...query,
+        data: query.data?.data
+    }
+}
